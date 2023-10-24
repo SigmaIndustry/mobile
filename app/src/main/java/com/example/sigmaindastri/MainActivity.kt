@@ -36,14 +36,15 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "index") {
+    NavHost(navController = navController, startDestination = "auth") {
+        composable("index") { Greeting(name = "Vadym") }
         composable("auth") { AuthView() }
     }
     Text(
         text = "Hello $name!",
         modifier = modifier
     )
-    Button(onClick = { navController.navigate("auth") }) {
+    Button(onClick = { navController.navigate("index") }) {
         Text(text = "To auth")
     }
 }
