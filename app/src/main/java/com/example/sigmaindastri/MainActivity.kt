@@ -3,6 +3,7 @@ package com.example.sigmaindastri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -11,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -26,7 +28,11 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+                    val navController = rememberNavController()
+                    NavHost(navController = navController, startDestination = "startPage") {
+                        composable("startPage") { Greeting(navController = navController,name = "Vadym sosi bibijon") }
+                        composable("auth") { AuthView() }
+                    }
                 }
             }
         }
@@ -34,28 +40,25 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "auth") {
-        composable("index") { Greeting(name = "Vadym") }
-        composable("auth") { AuthView() }
-    }
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-    Button(onClick = { navController.navigate("index") }) {
-        Text(text = "To auth")
+fun Greeting(navController: NavHostController, name: String, modifier: Modifier = Modifier) {
+    Column {
+        Text(
+            text = "Hello $name!",
+            modifier = modifier
+        )
+        Button(onClick = { navController.navigate("auth") }) {
+            Text(text = "To auth")
+        }
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    SigmaIndastriTheme {
-        Greeting("Android")
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun GreetingPreview() {
+//    SigmaIndastriTheme {
+//        Greeting("Android")
+//    }
+//}
 
 @Composable
 fun AuthView(){
