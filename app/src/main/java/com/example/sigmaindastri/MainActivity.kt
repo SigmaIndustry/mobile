@@ -108,9 +108,54 @@ fun LoginView(){
         }
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegistrationView(){
-    Text(
-        text = "Hello from registration view"
-    )
+    var email by remember { mutableStateOf("")}
+    var password by remember { mutableStateOf("")}
+    var firstName by remember { mutableStateOf("")}
+    var lastName by remember { mutableStateOf("")}
+    var isValidEmail by remember { mutableStateOf(false) }
+    var isValidPassword by remember { mutableStateOf(false) }
+    var isValidFirstName by remember { mutableStateOf(false) }
+    var isValidLastName by remember { mutableStateOf(false) }
+    val emailRequiredChars = setOf('@', '.')
+    Column (
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        OutlinedTextField(value = email,
+            onValueChange = { input ->
+                email = input
+                isValidEmail = input.isNotEmpty() && input.all(emailRequiredChars::contains)
+            },
+            label = { Text("Email") },
+        )
+        OutlinedTextField(value = password,
+            onValueChange = { input ->
+                password = input
+                isValidPassword = input.length >= 6
+            },
+            label = { Text("Password") },
+        )
+        OutlinedTextField(value = firstName,
+            onValueChange = { input ->
+                firstName = input
+                isValidFirstName = input.isNotEmpty()
+            },
+            label = { Text("First Name") },
+        )
+        OutlinedTextField(value = lastName,
+            onValueChange = { input ->
+                lastName = input
+                isValidLastName = input.isNotEmpty()
+            },
+            label = { Text("Last Name") },
+        )
+        Button(onClick = {  }, enabled = isValidEmail && isValidPassword && isValidLastName && isValidFirstName) {
+            Text(text = "Sign up", fontSize = 20.sp)
+        }
+    }
 }
