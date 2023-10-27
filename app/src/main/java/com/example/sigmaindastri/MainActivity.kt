@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -41,7 +40,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val navController = rememberNavController()
                     val stateManager by remember { mutableStateOf(StateManager(navController, "")) }
-                    NavHost(navController = navController, startDestination = "startPage") {
+                    NavHost(navController = navController, startDestination = Route.Index.url) {
                         composable(Route.Index.url) { Greeting(navController = navController,name = "Vadym sosi bibijon") }
                         composable(Route.Login.url) { LoginView() }
                         composable(Route.Registration.url) { RegistrationView() }
