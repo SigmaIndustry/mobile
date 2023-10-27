@@ -40,7 +40,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
-                    val stateManager by remember { mutableStateOf(StateManager(rememberNavController(), "")) }
+                    val stateManager by remember { mutableStateOf(StateManager(navController, "")) }
                     NavHost(navController = navController, startDestination = "startPage") {
                         composable(Route.Index.url) { Greeting(navController = navController,name = "Vadym sosi bibijon") }
                         composable(Route.Login.url) { LoginView() }
