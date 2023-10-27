@@ -92,14 +92,14 @@ fun LoginView(){
         OutlinedTextField(value = email,
             onValueChange = { input ->
                 email = input
-                isValidEmail = input.isNotEmpty() && input.any(emailRequiredChars::contains)
+                isValidEmail = input.isNotEmpty() && input.all(emailRequiredChars::contains)
             },
             label = { Text("Email") },
         )
         OutlinedTextField(value = password,
             onValueChange = { input ->
                 password = input
-                isValidPassword = input.isNotEmpty() && input.length >= 6
+                isValidPassword = input.length >= 6
             },
             label = { Text("Password") },
         )
