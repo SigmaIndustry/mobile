@@ -105,7 +105,7 @@ fun LoginView(){
             },
             label = { Text("Email") },
         )
-        Button(onClick = {  }) {
+        Button(onClick = {  }, enabled = isValidEmail && isValidPassword) {
             Text(text = "Log in", fontSize = 20.sp)
         }
     }
