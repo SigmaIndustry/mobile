@@ -80,16 +80,33 @@ fun Greeting(navController: NavHostController, name: String) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginView(){
-    var username by remember { mutableStateOf("")}
+    var email by remember { mutableStateOf("")}
+    var password by remember { mutableStateOf("")}
+    var isValidEmail by remember { mutableStateOf(false) }
+    var isValidPassword by remember { mutableStateOf(false) }
+    val emailRequiredChars = setOf('@', '.')
     Column (
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(text = "Hello from login view ${username}")
-        OutlinedTextField(value = username , onValueChange = { username = it } )
+        Text(text = "Hello from login view ${email}")
+        OutlinedTextField(value = email,
+            onValueChange = { input ->
+                email = input
+                isValidEmail = input.isNotEmpty() && input.any(emailRequiredChars::contains)
+            },
+            label = { Text("Email") },
+        )
+        OutlinedTextField(value = password,
+            onValueChange = { input ->
+                password = input
+                isValidPassword = input.isNotEmpty() && input.length >= 6
+            },
+            label = { Text("Email") },
+        )
         Button(onClick = {  }) {
-
+            Text(text = "Log in", fontSize = 20.sp)
         }
     }
 }
