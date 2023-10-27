@@ -23,7 +23,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -41,7 +40,7 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     val stateManager by remember { mutableStateOf(StateManager(navController, "")) }
                     NavHost(navController = navController, startDestination = Route.Index.url) {
-                        composable(Route.Index.url) { Greeting(navController = navController,name = "Vadym sosi bibijon") }
+                        composable(Route.Index.url) { Greeting(stateManager = stateManager,name = "Vadym sosi bibijon") }
                         composable(Route.Login.url) { LoginView() }
                         composable(Route.Registration.url) { RegistrationView() }
                     }
@@ -51,14 +50,14 @@ class MainActivity : ComponentActivity() {
     }
 }
 @Composable
-fun Greeting(navController: NavHostController, name: String) {
+fun Greeting(stateManager: StateManager, name: String) {
     Column (
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ){
         Button(
-            onClick = { navController.navigate("login") },
+            onClick = { stateManager.navController.navigate("login") },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 32.dp)
@@ -66,7 +65,7 @@ fun Greeting(navController: NavHostController, name: String) {
             Text(text = "Log in", fontSize = 40.sp)
         }
         Button(
-            onClick = { navController.navigate("registration") },
+            onClick = { stateManager.navController.navigate("registration") },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 32.dp)
@@ -102,7 +101,7 @@ fun LoginView(){
                 password = input
                 isValidPassword = input.isNotEmpty() && input.length >= 6
             },
-            label = { Text("Email") },
+            label = { Text("Password") },
         )
         Button(onClick = {  }, enabled = isValidEmail && isValidPassword) {
             Text(text = "Log in", fontSize = 20.sp)
