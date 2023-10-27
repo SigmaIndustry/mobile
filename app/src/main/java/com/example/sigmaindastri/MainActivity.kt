@@ -1,6 +1,7 @@
 package com.example.sigmaindastri
 
 import android.os.Bundle
+import android.widget.DatePicker
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
@@ -121,6 +122,7 @@ fun RegistrationView(){
     var isValidFirstName by remember { mutableStateOf(false) }
     var isValidLastName by remember { mutableStateOf(false) }
     val emailRequiredChars = setOf('@', '.')
+
     Column (
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -154,6 +156,8 @@ fun RegistrationView(){
             },
             label = { Text("Last Name") },
         )
+        
+
         Button(onClick = {  }, enabled = isValidEmail && isValidPassword && isValidLastName && isValidFirstName) {
             Text(text = "Sign up", fontSize = 20.sp)
         }
