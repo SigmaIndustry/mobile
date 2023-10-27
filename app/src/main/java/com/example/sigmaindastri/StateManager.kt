@@ -9,4 +9,5 @@ class StateManager(navCtrl: NavController, userToken: String) {
     fun save() {
        print("Save me latter ${httpManager.userToken}")
     }
+
 }
