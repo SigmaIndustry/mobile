@@ -40,7 +40,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val navController = rememberNavController()
                     val stateManager by remember { mutableStateOf(StateManager(navController, "")) }
-                    NavHost(navController = navController, startDestination = "startPage") {
+                    NavHost(navController = navController, startDestination = Route.Index.url) {
                         composable(Route.Index.url) { Greeting(navController = navController,name = "Vadym sosi bibijon") }
                         composable(Route.Login.url) { LoginView() }
                         composable(Route.Registration.url) { RegistrationView() }
