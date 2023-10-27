@@ -4,22 +4,29 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.navigation.NavController
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -35,49 +42,62 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Main()
+                    val navController = rememberNavController()
+                    NavHost(navController = navController, startDestination = "startPage") {
+                        composable("startPage") { Greeting(navController = navController,name = "Vadym sosi bibijon") }
+                        composable("login") { LoginView() }
+                        composable("registration") { RegistrationView() }
+                    }
                 }
             }
         }
     }
 }
-
 @Composable
-fun Main() {
-    val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "auth") {
-        composable("auth") { AuthView(navController) }
-        composable("main") { Greeting( "Vadym", navController) }
-    }
-}
-
-@Composable
-fun Greeting(name: String, navController: NavController, modifier: Modifier = Modifier) {
-    var counter by remember { mutableStateOf(0) }
-    Column {
-        Text(
-            text = "Hello $name!",
-            modifier = modifier
-        )
-        Button(onClick = { counter ++ },
-            modifier = modifier.width(200.dp)) {
-            Text(text = "To auth${counter}")
+fun Greeting(navController: NavHostController, name: String) {
+    Column (
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ){
+        Button(
+            onClick = { navController.navigate("login") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 32.dp)
+        ) {
+            Text(text = "Log in", fontSize = 40.sp)
         }
-        Button(onClick = { navController.navigate("auth") }) {
-            Text("Log out")
+        Button(
+            onClick = { navController.navigate("registration") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 32.dp)
+        ) {
+            Text(text = "Sign up", fontSize = 40.sp)
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AuthView(navController: NavController){
-    Row {
-        Text(
-            text = "Hello from auth view"
-        )
-        Button(onClick = { navController.navigate("main") }) {
-            Text("Login")
-        }
+fun LoginView(){
+    var username by remember { mutableStateOf("")}
+    Column (
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(text = "Hello from login view ${username}")
+        OutlinedTextField(value = username , onValueChange = { username = it } )
+        Button(onClick = {  }) {
 
+        }
     }
+}
+@Composable
+fun RegistrationView(){
+    Text(
+        text = "Hello from registration view"
+    )
 }
