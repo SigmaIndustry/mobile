@@ -58,20 +58,7 @@ class MainActivity : ComponentActivity() {
 }
 @Composable
 fun Greeting(stateManager: StateManager, name: String) {
-    val mContext = LocalContext.current
 
-    val mCalendar = Calendar.getInstance()
-    val mYear = mCalendar.get(Calendar.YEAR)
-    val mMonth = mCalendar.get(Calendar.MONTH)
-    val mDay = mCalendar.get(Calendar.DAY_OF_MONTH)
-    mCalendar.time = Date()
-    val mDate = remember { mutableStateOf("") }
-    val mDatePickerDialog = DatePickerDialog(
-        mContext,
-        { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
-            mDate.value = "$mDayOfMonth/${mMonth+1}/$mYear"
-        }, mYear, mMonth, mDay
-    )
     Column (
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -93,9 +80,7 @@ fun Greeting(stateManager: StateManager, name: String) {
         ) {
             Text(text = "Sign up", fontSize = 40.sp)
         }
-        Button(onClick = { mDatePickerDialog.show() }) {
-            Text(text = "Open Date Picker", color = Color.White)
-        }
+
     }
 }
 
@@ -146,6 +131,22 @@ fun RegistrationView(){
     var isValidLastName by remember { mutableStateOf(false) }
     val emailRequiredChars = setOf('@', '.')
 
+    val mContext = LocalContext.current
+
+    val mCalendar = Calendar.getInstance()
+    val mYear = mCalendar.get(Calendar.YEAR)
+    val mMonth = mCalendar.get(Calendar.MONTH)
+    val mDay = mCalendar.get(Calendar.DAY_OF_MONTH)
+    mCalendar.time = Date()
+    val mDate = remember { mutableStateOf("") }
+    val mDatePickerDialog = DatePickerDialog(
+        mContext,
+        { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
+            mDate.value = "$mDayOfMonth/${mMonth+1}/$mYear"
+        }, mYear, mMonth, mDay
+    )
+
+
     Column (
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -179,7 +180,10 @@ fun RegistrationView(){
             },
             label = { Text("Last Name") },
         )
-        
+
+        Button(onClick = { mDatePickerDialog.show() }) {
+            Text(text = "Open Date Picker", color = Color.White)
+        }
 
         Button(onClick = {  }, enabled = isValidEmail && isValidPassword && isValidLastName && isValidFirstName) {
             Text(text = "Sign up", fontSize = 20.sp)
