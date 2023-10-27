@@ -35,16 +35,16 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             SigmaIndastriTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
+                    val stateManager by remember { mutableStateOf(StateManager(rememberNavController(), "")) }
                     NavHost(navController = navController, startDestination = "startPage") {
-                        composable("startPage") { Greeting(navController = navController,name = "Vadym sosi bibijon") }
-                        composable("login") { LoginView() }
-                        composable("registration") { RegistrationView() }
+                        composable(Route.Index.url) { Greeting(navController = navController,name = "Vadym sosi bibijon") }
+                        composable(Route.Login.url) { LoginView() }
+                        composable(Route.Registration.url) { RegistrationView() }
                     }
                 }
             }
