@@ -1,6 +1,7 @@
 package com.example.sigmaindastri
 
 import android.app.DatePickerDialog
+import android.content.Context
 import android.os.Bundle
 import android.widget.DatePicker
 import androidx.activity.ComponentActivity
@@ -36,11 +37,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.sigmaindastri.ui.theme.SigmaIndastriTheme
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.lang.reflect.Array.get
+import java.time.Instant
 import java.util.Calendar
 import java.util.Date
 
 class MainActivity : ComponentActivity() {
+    val context = this
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -52,14 +58,9 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     val stateManager by remember { mutableStateOf(StateManager(navController, "")) }
                     NavHost(navController = navController, startDestination = Route.Index.url) {
-                        composable(Route.Index.url) {
-                            Greeting(
-                                stateManager = stateManager,
-                                name = "Vadym sosi bibijon"
-                            )
-                        }
-                        composable(Route.Login.url) { LoginView() }
-                        composable(Route.Registration.url) { RegistrationView() }
+                        composable(Route.Index.url) { Greeting(stateManager = stateManager) }
+                        composable(Route.Login.url) { LoginView(stateManager, context) }
+                        composable(Route.Registration.url) { RegistrationView(stateManager = stateManager) }
                     }
                 }
             }
@@ -68,7 +69,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(stateManager: StateManager, name: String) {
+fun Greeting(stateManager: StateManager) {
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -97,7 +98,12 @@ fun Greeting(stateManager: StateManager, name: String) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginView() {
+fun LoginView(stateManager: StateManager, context: Context) {
+
+    lateinit var sessionManager: SessionManager
+    lateinit var apiClient: ApiClient
+    apiClient = ApiClient()
+    sessionManager = SessionManager(context)
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var isValidEmail by remember { mutableStateOf(false) }
@@ -125,7 +131,28 @@ fun LoginView() {
             },
             label = { Text("Password") },
         )
-        Button(onClick = { }, enabled = isValidEmail && isValidPassword) {
+        Button(onClick = {
+            apiClient.getApiService()
+                .login(LoginRequest(email = email, password = password))
+                .enqueue(object : Callback<LoginResponse> {
+                    override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                        // Error logging in
+                   }
+
+                    override fun onResponse(
+                        call: Call<LoginResponse>,
+                        response: Response<LoginResponse>
+                    ) {
+                        val loginResponse = response.body()
+
+                        if (loginResponse?.statusCode == 200 && loginResponse.user != null) {
+                            sessionManager.saveAuthToken(loginResponse.authToken)
+                        } else {
+                            // Error logging in
+                        }
+                    }
+                })
+        }, /*enabled = isValidEmail && isValidPassword*/) {
             Text(text = "Log in", fontSize = 20.sp)
         }
     }
@@ -133,7 +160,7 @@ fun LoginView() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegistrationView() {
+fun RegistrationView(stateManager: StateManager) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var firstName by remember { mutableStateOf("") }
@@ -143,9 +170,14 @@ fun RegistrationView() {
     var isValidFirstName by remember { mutableStateOf(false) }
     var isValidLastName by remember { mutableStateOf(false) }
     val emailRequiredChars = setOf('@', '.')
-    var isMale by remember { mutableStateOf(false) }
-    var isServiceProvider by remember { mutableStateOf(false) }
-    val dateOfBirth = remember { mutableStateOf("") }
+
+
+
+    var sex by remember { mutableStateOf(Sex.Male) }
+
+    var role by remember { mutableStateOf(Role.User) }
+
+    val birthDate = remember { mutableStateOf(Date.from(Instant.now())) }
 
     val mContext = LocalContext.current
     val mCalendar = Calendar.getInstance()
@@ -159,7 +191,7 @@ fun RegistrationView() {
     val mDatePickerDialog = DatePickerDialog(
         mContext,
         { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
-            dateOfBirth.value = "$mDayOfMonth/${mMonth + 1}/$mYear"
+            birthDate.value = Date("$mYear-$mMonth-$mDayOfMonth")
         }, mYear, mMonth, mDay
     )
 
@@ -211,15 +243,15 @@ fun RegistrationView() {
             Text("Choose your sex")
             Button(
                 onClick = {
-                    isMale = true
+                    sex = Sex.Male
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = if (isMale) Color(0xFF6650a4) else Color.Gray)
+                colors = ButtonDefaults.buttonColors(containerColor = if (sex == Sex.Male) Color(0xFF6650a4) else Color.Gray)
             ) {
                 Text("Male")
             }
             Button(
-                onClick = { isMale = false },
-                colors = ButtonDefaults.buttonColors(containerColor = if (!isMale) Color(0xFF6650a4) else Color.Gray)
+                onClick = { sex = Sex.Female },
+                colors = ButtonDefaults.buttonColors(containerColor = if (sex == Sex.Female) Color(0xFF6650a4) else Color.Gray)
             ) {
                 Text("Female")
             }
@@ -229,9 +261,9 @@ fun RegistrationView() {
         {
             Text("Choose your role")
             Button(
-                onClick = { isServiceProvider = false },
+                onClick = { role = Role.User },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = if (!isServiceProvider) Color(
+                    containerColor = if (role == Role.User) Color(
                         0xFF6650a4
                     ) else Color.Gray
                 )
@@ -240,9 +272,9 @@ fun RegistrationView() {
                 Text("User")
             }
             Button(
-                onClick = { isServiceProvider = true },
+                onClick = { role = Role.ServiceProvider },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = if (isServiceProvider) Color(
+                    containerColor = if (role == Role.ServiceProvider) Color(
                         0xFF6650a4
                     ) else Color.Gray
                 )
@@ -253,7 +285,25 @@ fun RegistrationView() {
         }
 
         Button(
-            onClick = { },
+            onClick = {
+//                stateManager.httpManager.getUserAPI().userRegistration(
+//                    User(
+//                        email,
+//                        password,
+//                        firstName,
+//                        lastName,
+//                        birthDate.value,
+//                        sex.name,
+//                        "",
+//                        role.name
+//                    )
+//                ).enqueue(object : Callback<LoginResponse> {
+//                    override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+//                        // Error logging in
+//                    }
+//                }
+//                )
+            },
             enabled = isValidEmail && isValidPassword && isValidLastName && isValidFirstName
         ) {
             Text(text = "Sign up", fontSize = 20.sp)
