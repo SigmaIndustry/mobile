@@ -46,7 +46,7 @@ import java.util.Calendar
 import java.util.Date
 
 class MainActivity : ComponentActivity() {
-    val context = this
+    private val context = this
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -59,7 +59,7 @@ class MainActivity : ComponentActivity() {
                     val stateManager by remember { mutableStateOf(StateManager(navController, "")) }
                     NavHost(navController = navController, startDestination = Route.Index.url) {
                         composable(Route.Index.url) { Greeting(stateManager = stateManager) }
-                        composable(Route.Login.url) { LoginView(stateManager, context) }
+                        composable(Route.Login.url) { LoginView(stateManager = stateManager, context = context) }
                         composable(Route.Registration.url) { RegistrationView(stateManager = stateManager) }
                     }
                 }
@@ -77,7 +77,7 @@ fun Greeting(stateManager: StateManager) {
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Button(
-            onClick = { stateManager.navController.navigate("login") },
+            onClick = { stateManager.navController.navigate(Route.Login.url) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 32.dp)
@@ -145,8 +145,8 @@ fun LoginView(stateManager: StateManager, context: Context) {
                     ) {
                         val loginResponse = response.body()
 
-                        if (loginResponse?.statusCode == 200 && loginResponse.user != null) {
-                            sessionManager.saveAuthToken(loginResponse.authToken)
+                        if (loginResponse?.statusCode == 200 && loginResponse.token != null) {
+                            sessionManager.saveAuthToken(loginResponse.token)
                         } else {
                             // Error logging in
                         }
