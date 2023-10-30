@@ -47,9 +47,9 @@ import java.util.Calendar
 import java.util.Date
 
 class MainActivity : ComponentActivity() {
-    val sessionManager = SessionManager(this)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val sessionManager = SessionManager(this)
         setContent {
             SigmaIndastriTheme {
                 Surface(
@@ -57,7 +57,6 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
-                    val stateManager by remember { mutableStateOf(navController) }
                     NavHost(navController = navController, startDestination = Route.Index.url) {
                         composable(Route.Index.url) { Greeting(navController) }
                         composable(Route.Login.url) { LoginView(sessionManager, navController) }
@@ -175,7 +174,7 @@ fun RegistrationView(navController: NavController) {
 
     var role by remember { mutableStateOf(Role.User) }
 
-    val birthDate = remember { mutableStateOf(Date.from(Instant.now())) }
+    var birthDate by remember { mutableStateOf("") }
 
     val mContext = LocalContext.current
     val mCalendar = Calendar.getInstance()
@@ -189,7 +188,7 @@ fun RegistrationView(navController: NavController) {
     val mDatePickerDialog = DatePickerDialog(
         mContext,
         { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
-            birthDate.value = Date("$mYear-$mMonth-$mDayOfMonth")
+            birthDate = "$mYear-$mMonth-$mDayOfMonth"
         }, mYear, mMonth, mDay
     )
 
@@ -234,7 +233,7 @@ fun RegistrationView(navController: NavController) {
         )
 
         Button(onClick = { mDatePickerDialog.show() }) {
-            Text(text = "Pick birth date: $mYear/$mMonth/$mDay", color = Color.White)
+            Text(text = "Pick birth date: $birthDate", color = Color.White)
         }
         Row()
         {
