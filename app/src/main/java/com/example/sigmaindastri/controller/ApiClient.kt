@@ -1,5 +1,6 @@
-package com.example.sigmaindastri
+package com.example.sigmaindastri.controller
 
+import com.example.sigmaindastri.model.Constants
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

@@ -1,4 +1,4 @@
-package com.example.sigmaindastri
+package com.example.sigmaindastri.model
 
 object Constants {
 

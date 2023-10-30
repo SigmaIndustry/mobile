@@ -1,13 +1,10 @@
 package com.example.sigmaindastri
 
 import android.app.DatePickerDialog
-import android.content.Context
 import android.os.Bundle
 import android.widget.DatePicker
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.Arrangement
@@ -17,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -37,12 +33,19 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.sigmaindastri.controller.ApiClient
+import com.example.sigmaindastri.controller.LoginController
+import com.example.sigmaindastri.controller.SessionManager
+import com.example.sigmaindastri.model.LoginRequest
+import com.example.sigmaindastri.model.LoginResponse
+import com.example.sigmaindastri.model.Role
+import com.example.sigmaindastri.model.Route
+import com.example.sigmaindastri.model.Sex
 import com.example.sigmaindastri.ui.theme.SigmaIndastriTheme
+import com.example.sigmaindastri.view.LoginView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.lang.reflect.Array.get
-import java.time.Instant
 import java.util.Calendar
 import java.util.Date
 
@@ -50,6 +53,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val sessionManager = SessionManager(this)
+        val loginController = LoginController(sessionManager)
         setContent {
             SigmaIndastriTheme {
                 Surface(
@@ -59,7 +63,7 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavHost(navController = navController, startDestination = Route.Index.url) {
                         composable(Route.Index.url) { Greeting(navController) }
-                        composable(Route.Login.url) { LoginView(sessionManager, navController) }
+                        composable(Route.Login.url) { LoginView(loginController, navController) }
                         composable(Route.Registration.url) { RegistrationView(navController) }
                     }
                 }
@@ -93,65 +97,6 @@ fun Greeting(navController: NavController) {
             Text(text = "Sign up", fontSize = 40.sp)
         }
 
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun LoginView(sessionManager: SessionManager, navController: NavController) {
-    lateinit var apiClient: ApiClient
-    apiClient = ApiClient()
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var isValidEmail by remember { mutableStateOf(false) }
-    var isValidPassword by remember { mutableStateOf(false) }
-    val emailRequiredChars = setOf('@', '.')
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(text = "Hello from login view ${email}")
-        OutlinedTextField(
-            value = email,
-            onValueChange = { input ->
-                email = input
-                isValidEmail = input.isNotEmpty() && input.all(emailRequiredChars::contains)
-            },
-            label = { Text("Email") },
-        )
-        OutlinedTextField(
-            value = password,
-            onValueChange = { input ->
-                password = input
-                isValidPassword = input.length >= 6
-            },
-            label = { Text("Password") },
-        )
-        Button(onClick = {
-            apiClient.getApiService()
-                .login(LoginRequest(email = email, password = password))
-                .enqueue(object : Callback<LoginResponse> {
-                    override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-                        // Error logging in
-                   }
-
-                    override fun onResponse(
-                        call: Call<LoginResponse>,
-                        response: Response<LoginResponse>
-                    ) {
-                        val loginResponse = response.body()
-
-                        if (loginResponse?.statusCode == 200 && loginResponse.token != null) {
-                            sessionManager.saveAuthToken(loginResponse.token)
-                        } else {
-                            // Error logging in
-                        }
-                    }
-                })
-        }, /*enabled = isValidEmail && isValidPassword*/) {
-            Text(text = "Log in", fontSize = 20.sp)
-        }
     }
 }
 
