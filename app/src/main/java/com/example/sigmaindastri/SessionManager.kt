@@ -2,6 +2,7 @@ package com.example.sigmaindastri
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.navigation.NavController
 
 class SessionManager (context: Context) {
     private var prefs: SharedPreferences = context.getSharedPreferences(context.getString(R.string.app_name), Context.MODE_PRIVATE)

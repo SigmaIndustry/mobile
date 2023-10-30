@@ -33,6 +33,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -46,7 +47,7 @@ import java.util.Calendar
 import java.util.Date
 
 class MainActivity : ComponentActivity() {
-    private val context = this
+    val sessionManager = SessionManager(this)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -56,11 +57,11 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
-                    val stateManager by remember { mutableStateOf(StateManager(navController, "")) }
+                    val stateManager by remember { mutableStateOf(navController) }
                     NavHost(navController = navController, startDestination = Route.Index.url) {
-                        composable(Route.Index.url) { Greeting(stateManager = stateManager) }
-                        composable(Route.Login.url) { LoginView(stateManager = stateManager, context = context) }
-                        composable(Route.Registration.url) { RegistrationView(stateManager = stateManager) }
+                        composable(Route.Index.url) { Greeting(navController) }
+                        composable(Route.Login.url) { LoginView(sessionManager, navController) }
+                        composable(Route.Registration.url) { RegistrationView(navController) }
                     }
                 }
             }
@@ -69,7 +70,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(stateManager: StateManager) {
+fun Greeting(navController: NavController) {
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -77,7 +78,7 @@ fun Greeting(stateManager: StateManager) {
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Button(
-            onClick = { stateManager.navController.navigate(Route.Login.url) },
+            onClick = { navController.navigate(Route.Login.url) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 32.dp)
@@ -85,7 +86,7 @@ fun Greeting(stateManager: StateManager) {
             Text(text = "Log in", fontSize = 40.sp)
         }
         Button(
-            onClick = { stateManager.navController.navigate("registration") },
+            onClick = { navController.navigate("registration") },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 32.dp)
@@ -98,12 +99,9 @@ fun Greeting(stateManager: StateManager) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginView(stateManager: StateManager, context: Context) {
-
-    lateinit var sessionManager: SessionManager
+fun LoginView(sessionManager: SessionManager, navController: NavController) {
     lateinit var apiClient: ApiClient
     apiClient = ApiClient()
-    sessionManager = SessionManager(context)
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var isValidEmail by remember { mutableStateOf(false) }
@@ -160,7 +158,7 @@ fun LoginView(stateManager: StateManager, context: Context) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegistrationView(stateManager: StateManager) {
+fun RegistrationView(navController: NavController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var firstName by remember { mutableStateOf("") }
