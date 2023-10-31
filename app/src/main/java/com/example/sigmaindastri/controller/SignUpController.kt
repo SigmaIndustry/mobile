@@ -1,6 +1,5 @@
 package com.example.sigmaindastri.controller
 
-import com.example.sigmaindastri.model.LoginRequest
 import com.example.sigmaindastri.model.LoginResponse
 import com.example.sigmaindastri.model.User
 import retrofit2.Call

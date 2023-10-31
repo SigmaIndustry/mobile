@@ -1,4 +1,4 @@
-package com.example.sigmaindastri.Composables
+package com.example.sigmaindastri.composables
 
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
@@ -14,6 +14,8 @@ import com.example.sigmaindastri.R
 import com.example.sigmaindastri.appui.appdrawer.AppDrawerContent
 import com.example.sigmaindastri.appui.appdrawer.AppDrawerItemInfo
 import com.example.sigmaindastri.controller.MainNavOption
+import com.example.sigmaindastri.controller.SearchController
+import com.example.sigmaindastri.controller.SessionManager
 import com.example.sigmaindastri.controller.mainGraph
 import com.example.sigmaindastri.ui.theme.SigmaIndastriTheme
 
@@ -23,10 +25,11 @@ import com.example.sigmaindastri.ui.theme.SigmaIndastriTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainCompose(
-    navController: NavHostController = rememberNavController(),
-    drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
-    //vm: IntroViewModel = hiltViewModel()
+    sessionManager: SessionManager
 ) {
+    val searchController = SearchController(sessionManager)
+    val navController: NavHostController = rememberNavController()
+    val drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     SigmaIndastriTheme {
         Surface {
             ModalNavigationDrawer(
@@ -43,7 +46,7 @@ fun MainCompose(
                                     popUpTo(NavRoutes.MainRoute.name)
                                 }
                             }
-                            MainNavOption.AuthorizationComposable -> {
+                            MainNavOption.ProfileComposable -> {
                                 navController.navigate(onUserPickedOption.name) {
                                     popUpTo(NavRoutes.MainRoute.name)
                                 }
@@ -57,7 +60,7 @@ fun MainCompose(
                     navController,
                     startDestination = NavRoutes.MainRoute.name
                 ) {
-                    mainGraph(drawerState)
+                    mainGraph(drawerState, sessionManager, searchController)
                 }
             }
         }
@@ -78,7 +81,7 @@ object DrawerParams {
             R.string.drawer_search_description
         ),
         AppDrawerItemInfo(
-            MainNavOption.AuthorizationComposable,
+            MainNavOption.ProfileComposable,
             R.string.drawer_profile,
             R.drawable.ic_info,
             R.string.drawer_profile_description

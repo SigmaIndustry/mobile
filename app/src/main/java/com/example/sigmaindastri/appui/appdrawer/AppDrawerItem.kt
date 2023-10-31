@@ -12,7 +12,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.example.sigmaindastri.controller.MainNavOption
-import com.example.sigmaindastri.Composables.DrawerParams
+import com.example.sigmaindastri.composables.DrawerParams
 
 
 @OptIn(ExperimentalMaterial3Api::class)

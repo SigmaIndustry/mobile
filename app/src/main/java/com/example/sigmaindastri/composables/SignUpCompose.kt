@@ -1,4 +1,4 @@
-package com.example.sigmaindastri.Composables
+package com.example.sigmaindastri.composables
 
 import android.app.DatePickerDialog
 import android.widget.DatePicker
@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -21,7 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.sigmaindastri.controller.SignUpController
 import com.example.sigmaindastri.model.Role
 import com.example.sigmaindastri.model.Sex
@@ -30,7 +31,11 @@ import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignUpCompose(signUpController: SignUpController, navController: NavController) {
+fun SignUpCompose(
+    signUpController: SignUpController,
+    drawerState: DrawerState,
+    navController: NavHostController
+) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var firstName by remember { mutableStateOf("") }
@@ -180,7 +185,7 @@ fun SignUpCompose(signUpController: SignUpController, navController: NavControll
                         "P"
                     }
                 )
-                navController.navigate("token")
+                //navController.navigate("token")
             },
             enabled = isValidEmail && isValidPassword && isValidLastName && isValidFirstName
         ) {

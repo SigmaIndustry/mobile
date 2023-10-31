@@ -19,17 +19,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import com.example.sigmaindastri.controller.LoginController
 import com.example.sigmaindastri.controller.SessionManager
-import com.example.sigmaindastri.controller.SignUpController
 import com.example.sigmaindastri.model.Route
 import com.example.sigmaindastri.ui.theme.SigmaIndastriTheme
-import com.example.sigmaindastri.Composables.LoginCompose
-import com.example.sigmaindastri.Composables.MainCompose
-import com.example.sigmaindastri.Composables.SignUpCompose
+import com.example.sigmaindastri.composables.MainCompose
 
 
 class MainActivity : ComponentActivity() {
@@ -37,15 +30,15 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val sessionManager = SessionManager(this)
-        val loginController = LoginController(sessionManager)
-        val signUpController = SignUpController(sessionManager)
+        //val loginController = LoginController(sessionManager)
+        //val signUpController = SignUpController(sessionManager)
         setContent {
             SigmaIndastriTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MainCompose()
+                    MainCompose(sessionManager)
 //                    val navController = rememberNavController()
 //                    NavHost(navController = navController, startDestination = Route.Index.url) {
 //                        composable(Route.Index.url) { Greeting(navController) }
