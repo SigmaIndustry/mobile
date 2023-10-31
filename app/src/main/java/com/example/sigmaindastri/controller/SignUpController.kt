@@ -35,6 +35,7 @@ class SignUpController(val sessionManager: SessionManager) {
 
                             if (loginResponse?.statusCode == 200) {
                                 sessionManager.saveAuthToken(loginResponse.token)
+
                             } else {
                                 // Error logging in
                             }

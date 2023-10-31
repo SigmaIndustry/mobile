@@ -1,4 +1,4 @@
-package com.example.sigmaindastri.view
+package com.example.sigmaindastri.Composables
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,18 +16,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.sigmaindastri.controller.ApiClient
 import com.example.sigmaindastri.controller.LoginController
-import com.example.sigmaindastri.controller.SessionManager
-import com.example.sigmaindastri.model.LoginRequest
-import com.example.sigmaindastri.model.LoginResponse
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginView(loginController: LoginController, navController: NavController) {
+fun LoginCompose(loginController: LoginController, navController: NavController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -58,6 +51,7 @@ fun LoginView(loginController: LoginController, navController: NavController) {
         )
         Button(onClick = {
             loginController.loginRequest(email, password)
+            navController.navigate("token")
         }, enabled = isValidEmail && isValidPassword) {
             Text(text = "Log in", fontSize = 20.sp)
         }

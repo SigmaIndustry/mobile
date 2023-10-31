@@ -1,4 +1,4 @@
-package com.example.sigmaindastri.view
+package com.example.sigmaindastri.Composables
 
 import android.app.DatePickerDialog
 import android.widget.DatePicker
@@ -30,7 +30,7 @@ import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignUpView(signUpController: SignUpController, navController: NavController) {
+fun SignUpCompose(signUpController: SignUpController, navController: NavController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var firstName by remember { mutableStateOf("") }
@@ -175,11 +175,12 @@ fun SignUpView(signUpController: SignUpController, navController: NavController)
                     },
                     "",
                     if (role == Role.User) {
-                        "U"
+                        "G"
                     } else {
                         "P"
                     }
                 )
+                navController.navigate("token")
             },
             enabled = isValidEmail && isValidPassword && isValidLastName && isValidFirstName
         ) {
