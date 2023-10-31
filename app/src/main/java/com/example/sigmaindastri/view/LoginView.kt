@@ -30,9 +30,10 @@ import retrofit2.Response
 fun LoginView(loginController: LoginController, navController: NavController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
     var isValidEmail by remember { mutableStateOf(false) }
     var isValidPassword by remember { mutableStateOf(false) }
-    val emailRequiredChars = setOf('@', '.')
+
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -43,7 +44,7 @@ fun LoginView(loginController: LoginController, navController: NavController) {
             value = email,
             onValueChange = { input ->
                 email = input
-                isValidEmail = input.isNotEmpty() && input.all(emailRequiredChars::contains)
+                isValidEmail = input.isNotEmpty()
             },
             label = { Text("Email") },
         )
@@ -56,8 +57,8 @@ fun LoginView(loginController: LoginController, navController: NavController) {
             label = { Text("Password") },
         )
         Button(onClick = {
-            loginController.loginRequest(email,password)
-        }, /*enabled = isValidEmail && isValidPassword*/) {
+            loginController.loginRequest(email, password)
+        }, enabled = isValidEmail && isValidPassword) {
             Text(text = "Log in", fontSize = 20.sp)
         }
     }

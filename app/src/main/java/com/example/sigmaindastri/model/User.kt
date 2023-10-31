@@ -17,10 +17,10 @@ data class User (
     var lastName: String,
 
     @SerializedName("birth_date")
-    var birthDate: Date,
+    var birthDate: String,
 
     @SerializedName("sex")
-    var sex: String,
+    val sex: String,
 
     @SerializedName("profile_picture")
     var photoUrl: String,
