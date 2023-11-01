@@ -30,8 +30,9 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.example.sigmaindastri.appui.appbar.AppBar
-import com.example.sigmaindastri.controller.SearchController
+import com.example.sigmaindastri.model.SearchRequest
 import com.example.sigmaindastri.model.SearchResult
+import com.example.sigmaindastri.viewmodels.SearchViewModel
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -41,11 +42,9 @@ import kotlinx.coroutines.suspendCancellableCoroutine
     ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class,
 )
 @Composable
-fun SearchScreenComposable(drawerState: DrawerState, searchController: SearchController) {
+fun SearchScreenComposable(drawerState: DrawerState, searchViewModel: SearchViewModel) {
     var text by remember { mutableStateOf("") }
     val keyboardController = LocalSoftwareKeyboardController.current
-    var errorMessage: String by remember {mutableStateOf("")}
-    var searchResultsResponse:List<SearchResult> by remember {mutableStateOf(listOf())}
     // val focusManager = LocalFocusManager.current
     //var searchResults: List<SearchResult>? = null
     Scaffold(
@@ -68,29 +67,26 @@ fun SearchScreenComposable(drawerState: DrawerState, searchController: SearchCon
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                 leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
                 keyboardActions = KeyboardActions(onSearch = {
-                    try {
-                        searchResultsResponse = searchController.searchRequest(
-                            text,
-                            10,
-                            0,
-                            0,
-                            1000000,
-                            "00",
-                            0,
-                            false
-                        ).results
+                        searchViewModel.getProductList(
+                            SearchRequest(
+                                text,
+                                10,
+                                0,
+                                0,
+                                10000000,
+                                "00",
+                                0,
+                                false
+                            )
+                        )
                         keyboardController?.hide()
-                    }
-                    catch (e: Exception) {
-                        errorMessage = e.message.toString()
-                    }
                 })
             )
-                LazyColumn {
-                    itemsIndexed(items = searchResultsResponse) { index, item ->
-                        ProductInSearchCompose(item)
-                    }
+            LazyColumn {
+                itemsIndexed(searchViewModel.searchResultsResponse) { index, item ->
+                    ProductInSearchCompose(item)
                 }
             }
         }
     }
+}

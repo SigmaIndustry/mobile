@@ -7,26 +7,28 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sigmaindastri.controller.ApiClient
 import com.example.sigmaindastri.controller.ApiService
-import com.example.sigmaindastri.controller.SearchController
 import com.example.sigmaindastri.controller.SessionManager
 import com.example.sigmaindastri.model.SearchRequest
 import com.example.sigmaindastri.model.SearchResponse
 import com.example.sigmaindastri.model.SearchResult
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-class MainViewModel(val sessionManager: SessionManager) : ViewModel() {
+class SearchViewModel() : ViewModel() {
     var searchResultsResponse:List<SearchResult> by mutableStateOf(listOf())
     var errorMessage: String by mutableStateOf("")
     val apiClient = ApiClient()
-    fun getProductList() {
+    fun getProductList(searchRequest: SearchRequest) {
         val apiService = apiClient.getApiService()
         viewModelScope.launch {
             try {
-                val response:SearchResponse
-                searchResultsResponse
+                searchResultsResponse = apiService.search(
+                    searchRequest).results
             }
             catch (e: Exception) {
-                errorMessage = e.message.toString()
+                println( e.message.toString())
             }
         }
     }

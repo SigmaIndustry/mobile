@@ -8,13 +8,14 @@ import androidx.navigation.compose.navigation
 import com.example.sigmaindastri.composables.NavRoutes
 import com.example.sigmaindastri.composables.ProfileCompose
 import com.example.sigmaindastri.composables.SearchScreenComposable
+import com.example.sigmaindastri.viewmodels.SearchViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
-fun NavGraphBuilder.mainGraph(drawerState: DrawerState, sessionManager: SessionManager, searchController: SearchController) {
+fun NavGraphBuilder.mainGraph(drawerState: DrawerState, sessionManager: SessionManager, searchViewModel: SearchViewModel) {
     navigation(startDestination = MainNavOption.SearchScreenComposable.name, route = NavRoutes.MainRoute.name) {
         composable(MainNavOption.SearchScreenComposable.name){
-            SearchScreenComposable(drawerState, searchController)
+            SearchScreenComposable(drawerState, searchViewModel)
         }
 
         composable(MainNavOption.ProfileComposable.name){

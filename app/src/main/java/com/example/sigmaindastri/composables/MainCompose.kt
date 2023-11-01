@@ -14,10 +14,10 @@ import com.example.sigmaindastri.R
 import com.example.sigmaindastri.appui.appdrawer.AppDrawerContent
 import com.example.sigmaindastri.appui.appdrawer.AppDrawerItemInfo
 import com.example.sigmaindastri.controller.MainNavOption
-import com.example.sigmaindastri.controller.SearchController
 import com.example.sigmaindastri.controller.SessionManager
 import com.example.sigmaindastri.controller.mainGraph
 import com.example.sigmaindastri.ui.theme.SigmaIndastriTheme
+import com.example.sigmaindastri.viewmodels.SearchViewModel
 
 
 /// initial remember statements to initialize the navigation and drawer
@@ -25,9 +25,9 @@ import com.example.sigmaindastri.ui.theme.SigmaIndastriTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainCompose(
-    sessionManager: SessionManager
+    sessionManager: SessionManager,
+    searchViewModel: SearchViewModel
 ) {
-    val searchController = SearchController(sessionManager)
     val navController: NavHostController = rememberNavController()
     val drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     SigmaIndastriTheme {
@@ -60,7 +60,7 @@ fun MainCompose(
                     navController,
                     startDestination = NavRoutes.MainRoute.name
                 ) {
-                    mainGraph(drawerState, sessionManager, searchController)
+                    mainGraph(drawerState, sessionManager, searchViewModel)
                 }
             }
         }

@@ -3,6 +3,7 @@ package com.example.sigmaindastri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,6 +24,7 @@ import com.example.sigmaindastri.controller.SessionManager
 import com.example.sigmaindastri.model.Route
 import com.example.sigmaindastri.ui.theme.SigmaIndastriTheme
 import com.example.sigmaindastri.composables.MainCompose
+import com.example.sigmaindastri.viewmodels.SearchViewModel
 
 
 class MainActivity : ComponentActivity() {
@@ -32,13 +34,14 @@ class MainActivity : ComponentActivity() {
         val sessionManager = SessionManager(this)
         //val loginController = LoginController(sessionManager)
         //val signUpController = SignUpController(sessionManager)
+        val searchViewModel by viewModels<SearchViewModel>()
         setContent {
             SigmaIndastriTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MainCompose(sessionManager)
+                    MainCompose(sessionManager, searchViewModel)
 //                    val navController = rememberNavController()
 //                    NavHost(navController = navController, startDestination = Route.Index.url) {
 //                        composable(Route.Index.url) { Greeting(navController) }
