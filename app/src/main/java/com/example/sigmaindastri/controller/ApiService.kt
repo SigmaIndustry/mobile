@@ -19,6 +19,6 @@ interface ApiService {
     fun signUp(@Body request: SignupRequest): Call<LoginResponse>
 
     @POST(Constants.SEARCH_URL)
-    fun search(@Body request: SearchRequest): Call<SearchResponse>
+    suspend fun search(@Body request: SearchRequest): Call<SearchResponse>
 
 }

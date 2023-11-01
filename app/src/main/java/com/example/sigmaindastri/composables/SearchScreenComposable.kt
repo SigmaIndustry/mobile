@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -31,22 +32,29 @@ import androidx.compose.ui.unit.dp
 import com.example.sigmaindastri.appui.appbar.AppBar
 import com.example.sigmaindastri.controller.SearchController
 import com.example.sigmaindastri.model.SearchResult
+import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.suspendCancellableCoroutine
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(
+    ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class,
+)
 @Composable
 fun SearchScreenComposable(drawerState: DrawerState, searchController: SearchController) {
     var text by remember { mutableStateOf("") }
     val keyboardController = LocalSoftwareKeyboardController.current
-   // val focusManager = LocalFocusManager.current
-    var searchResults: List<SearchResult>? = searchController.requestResponse?.results
+    var errorMessage: String by remember {mutableStateOf("")}
+    var searchResultsResponse:List<SearchResult> by remember {mutableStateOf(listOf())}
+    // val focusManager = LocalFocusManager.current
+    //var searchResults: List<SearchResult>? = null
     Scaffold(
         topBar = {
             AppBar(
                 drawerState = drawerState,
             )
         }
-    ) {innerPading->
+    ) { innerPading ->
         Column(
             modifier = Modifier.padding(innerPading),
             verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -60,28 +68,29 @@ fun SearchScreenComposable(drawerState: DrawerState, searchController: SearchCon
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                 leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
                 keyboardActions = KeyboardActions(onSearch = {
-                    searchController.searchRequest(
-                        text,
-                        10,
-                        0,
-                        0,
-                        1000000,
-                        "00",
-                        0,
-                        false
-                    )
-                    // Hide the keyboard after submitting the search
-                    keyboardController?.hide()
-                }
-                )
+                    try {
+                        searchResultsResponse = searchController.searchRequest(
+                            text,
+                            10,
+                            0,
+                            0,
+                            1000000,
+                            "00",
+                            0,
+                            false
+                        ).results
+                        keyboardController?.hide()
+                    }
+                    catch (e: Exception) {
+                        errorMessage = e.message.toString()
+                    }
+                })
             )
-            if (searchResults != null) {
                 LazyColumn {
-                    items(searchResults!!) { result ->
-                        ProductInSearchCompose(result)
+                    itemsIndexed(items = searchResultsResponse) { index, item ->
+                        ProductInSearchCompose(item)
                     }
                 }
             }
         }
     }
-}

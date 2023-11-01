@@ -11,7 +11,6 @@ import retrofit2.Response
 
 class SearchController(val sessionManager: SessionManager) {
     var apiClient = ApiClient()
-    var requestResponse: SearchResponse? = null
     fun searchRequest(
         searchQuery: String,
         pageLimit: Int,
@@ -21,7 +20,8 @@ class SearchController(val sessionManager: SessionManager) {
         category: String,
         minRating: Int,
         hasReviews: Boolean
-    ): SearchResponse? {
+    ): SearchResponse {
+        lateinit var requestResponse: SearchResponse
         apiClient.getApiService()
             .search(
                 SearchRequest(
@@ -47,9 +47,9 @@ class SearchController(val sessionManager: SessionManager) {
                     val searchResponse = response.body()
 
                     if (searchResponse?.statusCode == 200) {
-                        requestResponse = searchResponse
+                         requestResponse = searchResponse
                     } else {
-                        // Error logging in
+                        throw Exception("Unable to get data")
                     }
                 }
             })
