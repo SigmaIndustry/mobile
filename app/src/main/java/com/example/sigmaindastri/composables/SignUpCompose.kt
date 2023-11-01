@@ -23,6 +23,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.sigmaindastri.controller.ProfileNavOption
+import com.example.sigmaindastri.controller.SessionManager
 import com.example.sigmaindastri.controller.SignUpController
 import com.example.sigmaindastri.model.Role
 import com.example.sigmaindastri.model.Sex
@@ -32,10 +34,11 @@ import java.util.Date
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpCompose(
-    signUpController: SignUpController,
+    sessionManager: SessionManager,
     drawerState: DrawerState,
     navController: NavHostController
 ) {
+    val signUpController = SignUpController(sessionManager)
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var firstName by remember { mutableStateOf("") }
@@ -185,7 +188,7 @@ fun SignUpCompose(
                         "P"
                     }
                 )
-                //navController.navigate("token")
+                navController.navigate(ProfileNavOption.ProfileTokenCompose.name)
             },
             enabled = isValidEmail && isValidPassword && isValidLastName && isValidFirstName
         ) {

@@ -1,7 +1,7 @@
 package com.example.sigmaindastri.controller
 
 import com.example.sigmaindastri.model.LoginResponse
-import com.example.sigmaindastri.model.User
+import com.example.sigmaindastri.model.SignupRequest
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -20,7 +20,7 @@ class SignUpController(val sessionManager: SessionManager) {
     ) {
         apiClient.getApiService()
             .signUp(
-                User(email, password, firstName, lastName, birthDate, sex, photoUrl, role))
+                SignupRequest(email, password, firstName, lastName, birthDate, sex, photoUrl, role))
                     .enqueue(object : Callback<LoginResponse> {
                         override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
                             // Error logging in

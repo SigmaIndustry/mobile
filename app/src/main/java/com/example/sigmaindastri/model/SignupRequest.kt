@@ -1,9 +1,8 @@
 package com.example.sigmaindastri.model
 
 import com.google.gson.annotations.SerializedName
-import java.util.Date
 
-data class User (
+data class SignupRequest (
     @SerializedName("email")
     var email: String,
 

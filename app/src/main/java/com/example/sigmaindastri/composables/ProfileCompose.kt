@@ -19,8 +19,6 @@ import com.example.sigmaindastri.controller.SignUpController
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileCompose(drawerState:DrawerState, sessionManager: SessionManager) {
-    val loginController = LoginController(sessionManager)
-    val signUpController = SignUpController(sessionManager)
     val navController: NavHostController = rememberNavController()
     Scaffold(
         topBar = {
@@ -33,7 +31,7 @@ fun ProfileCompose(drawerState:DrawerState, sessionManager: SessionManager) {
             navController,
             startDestination = MainNavOption.ProfileComposable.name
         ) {
-            profileGraph(drawerState, loginController, signUpController, navController)
+            profileGraph(drawerState, sessionManager, navController)
         }
     }
 }

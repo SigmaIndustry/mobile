@@ -18,14 +18,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.sigmaindastri.controller.LoginController
+import com.example.sigmaindastri.controller.ProfileNavOption
+import com.example.sigmaindastri.controller.SessionManager
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginCompose(
-    loginController: LoginController,
+    sessionManager: SessionManager,
     drawerState: DrawerState,
     navController: NavHostController
 ) {
+    val loginController = LoginController(sessionManager)
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -56,7 +59,7 @@ fun LoginCompose(
         )
         Button(onClick = {
             loginController.loginRequest(email, password)
-            //navController.navigate("token")
+            navController.navigate(ProfileNavOption.ProfileTokenCompose.name)
         }, enabled = isValidEmail && isValidPassword) {
             Text(text = "Log in", fontSize = 20.sp)
         }

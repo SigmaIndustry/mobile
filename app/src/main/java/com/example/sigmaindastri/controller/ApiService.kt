@@ -5,7 +5,7 @@ import com.example.sigmaindastri.model.LoginRequest
 import com.example.sigmaindastri.model.LoginResponse
 import com.example.sigmaindastri.model.SearchRequest
 import com.example.sigmaindastri.model.SearchResponse
-import com.example.sigmaindastri.model.User
+import com.example.sigmaindastri.model.SignupRequest
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -16,7 +16,7 @@ interface ApiService {
     fun login(@Body request: LoginRequest): Call<LoginResponse>
 
     @POST(Constants.REGISTRATION_URL)
-    fun signUp(@Body request: User): Call<LoginResponse>
+    fun signUp(@Body request: SignupRequest): Call<LoginResponse>
 
     @POST(Constants.SEARCH_URL)
     fun search(@Body request: SearchRequest): Call<SearchResponse>
