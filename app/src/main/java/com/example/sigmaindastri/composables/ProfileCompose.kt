@@ -10,15 +10,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.example.sigmaindastri.appui.appbar.AppBar
 import com.example.sigmaindastri.controller.profileGraph
-import com.example.sigmaindastri.controller.LoginController
 import com.example.sigmaindastri.controller.MainNavOption
 import com.example.sigmaindastri.controller.SessionManager
-import com.example.sigmaindastri.controller.SignUpController
+import com.example.sigmaindastri.viewmodels.LoginViewModel
+import com.example.sigmaindastri.viewmodels.SignUpViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileCompose(drawerState:DrawerState, sessionManager: SessionManager) {
+fun ProfileCompose(drawerState:DrawerState, sessionManager: SessionManager,loginViewModel: LoginViewModel, signUpViewModel: SignUpViewModel) {
     val navController: NavHostController = rememberNavController()
     Scaffold(
         topBar = {
@@ -31,7 +31,7 @@ fun ProfileCompose(drawerState:DrawerState, sessionManager: SessionManager) {
             navController,
             startDestination = MainNavOption.ProfileComposable.name
         ) {
-            profileGraph(drawerState, sessionManager, navController)
+            profileGraph(drawerState, sessionManager, navController,loginViewModel, signUpViewModel)
         }
     }
 }

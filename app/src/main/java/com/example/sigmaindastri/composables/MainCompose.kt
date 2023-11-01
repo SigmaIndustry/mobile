@@ -17,7 +17,9 @@ import com.example.sigmaindastri.controller.MainNavOption
 import com.example.sigmaindastri.controller.SessionManager
 import com.example.sigmaindastri.controller.mainGraph
 import com.example.sigmaindastri.ui.theme.SigmaIndastriTheme
+import com.example.sigmaindastri.viewmodels.LoginViewModel
 import com.example.sigmaindastri.viewmodels.SearchViewModel
+import com.example.sigmaindastri.viewmodels.SignUpViewModel
 
 
 /// initial remember statements to initialize the navigation and drawer
@@ -26,7 +28,9 @@ import com.example.sigmaindastri.viewmodels.SearchViewModel
 @Composable
 fun MainCompose(
     sessionManager: SessionManager,
-    searchViewModel: SearchViewModel
+    searchViewModel: SearchViewModel,
+    loginViewModel: LoginViewModel,
+    signUpViewModel: SignUpViewModel
 ) {
     val navController: NavHostController = rememberNavController()
     val drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -60,7 +64,7 @@ fun MainCompose(
                     navController,
                     startDestination = NavRoutes.MainRoute.name
                 ) {
-                    mainGraph(drawerState, sessionManager, searchViewModel)
+                    mainGraph(drawerState, sessionManager, searchViewModel, loginViewModel, signUpViewModel)
                 }
             }
         }

@@ -24,7 +24,9 @@ import com.example.sigmaindastri.controller.SessionManager
 import com.example.sigmaindastri.model.Route
 import com.example.sigmaindastri.ui.theme.SigmaIndastriTheme
 import com.example.sigmaindastri.composables.MainCompose
+import com.example.sigmaindastri.viewmodels.LoginViewModel
 import com.example.sigmaindastri.viewmodels.SearchViewModel
+import com.example.sigmaindastri.viewmodels.SignUpViewModel
 
 
 class MainActivity : ComponentActivity() {
@@ -35,13 +37,15 @@ class MainActivity : ComponentActivity() {
         //val loginController = LoginController(sessionManager)
         //val signUpController = SignUpController(sessionManager)
         val searchViewModel by viewModels<SearchViewModel>()
+        val loginViewModel by viewModels<LoginViewModel>()
+        val signUpViewModel by viewModels<SignUpViewModel>()
         setContent {
             SigmaIndastriTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MainCompose(sessionManager, searchViewModel)
+                    MainCompose(sessionManager, searchViewModel, loginViewModel, signUpViewModel)
 //                    val navController = rememberNavController()
 //                    NavHost(navController = navController, startDestination = Route.Index.url) {
 //                        composable(Route.Index.url) { Greeting(navController) }

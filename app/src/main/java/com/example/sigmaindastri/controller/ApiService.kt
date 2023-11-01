@@ -13,10 +13,10 @@ import retrofit2.http.POST
 interface ApiService {
 
     @POST(Constants.LOGIN_URL)
-    fun login(@Body request: LoginRequest): Call<LoginResponse>
+    suspend fun login(@Body request: LoginRequest): LoginResponse
 
     @POST(Constants.REGISTRATION_URL)
-    fun signUp(@Body request: SignupRequest): Call<LoginResponse>
+    suspend fun signUp(@Body request: SignupRequest): LoginResponse
 
     @POST(Constants.SEARCH_URL)
     suspend fun search(@Body request: SearchRequest): SearchResponse

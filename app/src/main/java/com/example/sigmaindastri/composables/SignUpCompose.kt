@@ -25,9 +25,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.sigmaindastri.controller.ProfileNavOption
 import com.example.sigmaindastri.controller.SessionManager
-import com.example.sigmaindastri.controller.SignUpController
 import com.example.sigmaindastri.model.Role
 import com.example.sigmaindastri.model.Sex
+import com.example.sigmaindastri.viewmodels.SignUpViewModel
 import java.util.Calendar
 import java.util.Date
 
@@ -36,9 +36,10 @@ import java.util.Date
 fun SignUpCompose(
     sessionManager: SessionManager,
     drawerState: DrawerState,
-    navController: NavHostController
+    navController: NavHostController,
+    signUpViewModel: SignUpViewModel
 ) {
-    val signUpController = SignUpController(sessionManager)
+
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var firstName by remember { mutableStateOf("") }
@@ -170,7 +171,7 @@ fun SignUpCompose(
 
         Button(
             onClick = {
-                signUpController.signUpRequest(
+                signUpViewModel.signUpRequest(
                     email,
                     password,
                     firstName,
@@ -186,11 +187,10 @@ fun SignUpCompose(
                         "G"
                     } else {
                         "P"
-                    }
+                    }, sessionManager
                 )
                 navController.navigate(ProfileNavOption.ProfileTokenCompose.name)
             },
-            enabled = isValidEmail && isValidPassword && isValidLastName && isValidFirstName
         ) {
             Text(text = "Sign up", fontSize = 20.sp)
         }
