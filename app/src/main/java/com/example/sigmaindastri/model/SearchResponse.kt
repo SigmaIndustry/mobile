@@ -10,7 +10,7 @@ data class SearchResponse (
     var size: Int,
 
     @SerializedName("results")
-    var results: Array<SearchResult>
+    var results: List<SearchResult>
 )
 
 

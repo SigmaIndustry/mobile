@@ -11,7 +11,7 @@ import retrofit2.Response
 
 class SearchController(val sessionManager: SessionManager) {
     var apiClient = ApiClient()
-    lateinit var requestResponse: SearchResponse
+    var requestResponse: SearchResponse? = null
     fun searchRequest(
         searchQuery: String,
         pageLimit: Int,
@@ -21,7 +21,7 @@ class SearchController(val sessionManager: SessionManager) {
         category: String,
         minRating: Int,
         hasReviews: Boolean
-    ): SearchResponse {
+    ): SearchResponse? {
         apiClient.getApiService()
             .search(
                 SearchRequest(

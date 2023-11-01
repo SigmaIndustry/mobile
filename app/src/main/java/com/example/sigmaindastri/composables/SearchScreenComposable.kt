@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -28,6 +30,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.example.sigmaindastri.appui.appbar.AppBar
 import com.example.sigmaindastri.controller.SearchController
+import com.example.sigmaindastri.model.SearchResult
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
@@ -36,7 +39,7 @@ fun SearchScreenComposable(drawerState: DrawerState, searchController: SearchCon
     var text by remember { mutableStateOf("") }
     val keyboardController = LocalSoftwareKeyboardController.current
    // val focusManager = LocalFocusManager.current
-
+    var searchResults: List<SearchResult>? = searchController.requestResponse?.results
     Scaffold(
         topBar = {
             AppBar(
@@ -63,16 +66,22 @@ fun SearchScreenComposable(drawerState: DrawerState, searchController: SearchCon
                         0,
                         0,
                         1000000,
-                        "string",
+                        "00",
                         0,
                         false
                     )
                     // Hide the keyboard after submitting the search
                     keyboardController?.hide()
-
                 }
+                )
             )
-            )
+            if (searchResults != null) {
+                LazyColumn {
+                    items(searchResults!!) { result ->
+                        ProductInSearchCompose(result)
+                    }
+                }
+            }
         }
     }
 }

@@ -11,7 +11,7 @@ data class SearchResult(
     var name: String,
 
     @SerializedName("pictures")
-    var pictures: Array<String>,
+    var pictures: List<String>,
 
     @SerializedName("description")
     var description: String,
